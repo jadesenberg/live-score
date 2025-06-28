@@ -44,7 +44,7 @@ export const DateLabel = styled.div`
 
 export const Score = styled.div`
   font-size: 3rem;
-  font-weight: 600;
+  font-weight: 400;
   text-align: center;
 `;
 
@@ -57,7 +57,7 @@ export const Teams = styled.div`
 
 export const TeamName = styled.div<{ $align: 'left' | 'right' }>`
   text-align: ${({ $align }) => $align};
-  font-size: 1rem;
+  font-size: 1.25rem;
 `;
 
 export const MatchCircle = styled.div<{
@@ -66,9 +66,12 @@ export const MatchCircle = styled.div<{
   $progress: number;
 }>`
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   ${({ $isLive, $color, $progress }) =>
     $isLive
@@ -83,18 +86,14 @@ export const MatchCircle = styled.div<{
           border: 2px solid ${$color};
         `}
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   ${({ $isLive }) =>
     $isLive &&
     css`
       &::before {
         content: '';
         position: absolute;
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
         background: #2c2c2c;
         border-radius: 50%;
       }
