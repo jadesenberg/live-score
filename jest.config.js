@@ -13,6 +13,11 @@ module.exports = {
     '^@hooks/(.*)$': '<rootDir>/hooks/$1',
     '^@constants/(.*)$': '<rootDir>/constants/$1'
   },
+  globals: {
+    'ts-jest': {
+      tsconfig: './tsconfig.jest.json'
+    },
+  },
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest'    // transform TS & TSX
   },

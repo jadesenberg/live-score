@@ -1,20 +1,31 @@
-import styled, { keyframes } from 'styled-components';
+'use client';
 
-const shimmer = keyframes`
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-`;
-
-const Skeleton = styled.div`
-  animation: ${shimmer} 1.5s infinite linear;
-  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
-  background-size: 800px 104px;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-  height: 100px;
-  width: 100%;
-`;
+import {
+  Card,
+  Meta,
+  SkeletonLine,
+  Score,
+  Teams,
+  TeamBar,
+  CirclePlaceholder,
+} from './SkeletonCard.styled';
 
 export default function SkeletonCard() {
-  return <Skeleton />;
+  return (
+    <Card>
+      <Meta>
+        <SkeletonLine width="20%" />
+        <SkeletonLine width="50%" height="1rem" />
+        <SkeletonLine width="30%" />
+      </Meta>
+
+      <Score />
+
+      <Teams>
+        <TeamBar width="40%" />
+        <CirclePlaceholder />
+        <TeamBar width="40%" />
+      </Teams>
+    </Card>
+  );
 }
