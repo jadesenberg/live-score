@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Match } from '@models/Match';
 import { STATUS_LABELS, LABEL_COLORS } from '@/constants/status';
 import {
