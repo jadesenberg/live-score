@@ -17,9 +17,15 @@ import {
   Minute,
   Divider,
 } from './MatchCard.styled';
+import useFormattedDate from '@/hooks/useFormattedDate';
+import useMatchMinute from '@/hooks/useMatchMinute';
+import getStatusKey from '@/lib/utils';
 
+interface MatchCardProps {
+  match: Match;
+}
 
-export default function MatchCard({ match }: { match: Match }) {
+export default function MatchCard({ match }: MatchCardProps) {
   const {
     competition,
     country,
@@ -32,57 +38,30 @@ export default function MatchCard({ match }: { match: Match }) {
     timestamp,
   } = match;
 
-  const statusKey =
-    liveStatus.toLowerCase() === 'canceled'
-      ? 'canceled'
-      : status.type;
-
+  const statusKey = getStatusKey(liveStatus, status.type);
   const isPreMatch = status.type === 'notstarted' && statusKey !== 'canceled';
-  const isLive     = statusKey === 'inprogress';
-  const isHT       = liveStatus === 'HT';
+  const isLive = statusKey === 'inprogress';
+  const isHT = liveStatus === 'HT';
   const isFinished = statusKey === 'finished';
 
-  const statusText = isPreMatch
-    ? ''
-    : STATUS_LABELS[statusKey] || '';
+  const dateTime = useFormattedDate(timestamp);
+  const minute = useMatchMinute(liveStatus, isLive);
 
-  const labelColor = LABEL_COLORS[statusKey] || LABEL_COLORS.default;
-  const ringColor =
-    isLive || isFinished
-      ? LABEL_COLORS.finished
-      : statusKey === 'canceled'
-      ? LABEL_COLORS.canceled
-      : LABEL_COLORS.default;
+  const progress = isHT ? 50 : isLive ? (minute / 90) * 100 : 0;
+  const statusText = isPreMatch ? '' : STATUS_LABELS[statusKey] ?? '';
+  const labelColor = LABEL_COLORS[statusKey] ?? LABEL_COLORS.default;
 
-  const dateTime = useMemo(() => {
-    const dt = new Date(timestamp * 1000);
-    const date = dt
-      .toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      .toUpperCase();
-    const time = dt.toLocaleTimeString('en-US', {
-      hour: '2-digit', minute: '2-digit', hour12: false,
-    });
-    return `${date} ${time}`;
-  }, [timestamp]);
-
-  const minute = useMemo(() => {
-    if (!isLive) return 0;
-    const raw = parseInt(liveStatus.replace('+', ''), 10) || 0;
-    return Math.min(Math.max(raw, 0), 90);
-  }, [liveStatus, isLive]);
-
-  const progress = isHT
-    ? 50
-    : isLive
-    ? (minute / 90) * 100
-    : 0;
+  const ringColor = (() => {
+    if (isLive || isFinished) return LABEL_COLORS.finished;
+    if (statusKey === 'canceled') return LABEL_COLORS.canceled;
+    return LABEL_COLORS.default;
+  })();
 
   return (
     <Card>
       <Meta>
         <Country>{country}</Country>
         <League>{competition}</League>
-
         {isPreMatch ? (
           <DateLabel>{dateTime}</DateLabel>
         ) : (
